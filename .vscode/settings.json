@@ -1,0 +1,5 @@
+{
+    "editor.guides.bracketPairs": "active",
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "dart.previewFlutterUiGuides": true
+}
