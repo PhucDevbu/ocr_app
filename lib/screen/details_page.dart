@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ocr_app/model/image.dart' as ima;
 import 'package:provider/provider.dart';
+
+import 'edit_text_page.dart';
 
 class DetailsPage extends StatefulWidget {
   static const routeName = 'DetailsPage';
@@ -16,7 +19,20 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  final _textController = TextEditingController();
+  late TextEditingController _textController;
+  late quill.QuillController _controller;
+  quill.Delta _delta = quill.Delta()..insert('');
+  @override
+  void initState() {
+    _textController = TextEditingController();
+    _controller = quill.QuillController(
+      document:
+          quill.Document.fromDelta(_delta.concat(quill.Delta()..insert('\n'))),
+      selection: TextSelection.collapsed(offset: _delta.length),
+    );
+    super.initState();
+  }
+
   @override
   void dispose() {
     _textController.dispose();
@@ -57,41 +73,75 @@ class _DetailsPageState extends State<DetailsPage> {
       textRecognizer.close();
 
       _textController.text = resultText;
+      _delta = quill.Delta()..insert(_textController.text);
+      _controller.document =
+          quill.Document.fromDelta(_delta.concat(quill.Delta()..insert('\n')));
+    }
+  }
+
+  Future<void> editText() async {
+    // Navigate to a new screen where the user can edit the text
+    final List<dynamic>? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditTextPage(controller: _controller),
+      ),
+    );
+
+    // Update the text with the new value returned from the editor screen
+    if (result != null) {
+      setState(() {
+        _delta = quill.Delta.fromJson(result);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final imageId = ModalRoute.of(context)?.settings.arguments as ima.MyImage;
-    return Scaffold(
-      appBar: AppBar(title: Text(imageId.title)),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 2.w, color: Colors.black)),
-              child: Image.file(
-                imageId.image,
-                fit: BoxFit.cover,
-              )),
-          SizedBox(
-            height: 16.h,
-          ),
-          ElevatedButton(
-            onPressed: () => _OCRImage(imageId),
-            child: Text('Recognize Text'),
-          ),
-          SizedBox(height: 16),
-          TextField(
-            style: TextStyle(fontSize: 12.sp),
-            controller: _textController,
-            maxLines: null,
-            decoration: InputDecoration(
-              hintText: 'Recognized Text',
-              border: OutlineInputBorder(),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(title: Text(imageId.title)),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 2.w, color: Colors.black)),
+                child: Image.file(
+                  imageId.image,
+                  fit: BoxFit.cover,
+                )),
+            SizedBox(
+              height: 16.h,
             ),
-          ),
-        ]),
+            ElevatedButton(
+              onPressed: () => _OCRImage(imageId),
+              child: Text('Recognize Text'),
+            ),
+            SizedBox(height: 16),
+            // TextField(
+            //   style: TextStyle(fontSize: 12.sp),
+            //   controller: _textController,
+            //   maxLines: null,
+            //   decoration: InputDecoration(
+            //     hintText: 'Recognized Text',
+            //     border: OutlineInputBorder(),
+            //   ),
+            // ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: quill.QuillEditor.basic(
+                controller: _controller,
+                readOnly: false, // true for view only mode
+              ),
+            ),
+            ElevatedButton(
+              onPressed: editText,
+              child: Text('Advanced Text Editor'),
+            ),
+          ]),
+        ),
       ),
     );
   }
