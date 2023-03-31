@@ -1,20 +1,22 @@
-import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:ocr_app/model/image.dart';
+
+import 'package:ocr_app/provider/image_file_provider.dart';
 import 'package:ocr_app/screen/home_page.dart';
 import 'package:ocr_app/screen/image_form_page.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
+
 
 import 'screen/details_page.dart';
+List<CameraDescription> cameras = [];
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  cameras = await availableCameras();
+
   runApp(const MyApp());
 }
 
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
                 scaffoldBackgroundColor: Colors.white,
-                appBarTheme: AppBarTheme(
+                appBarTheme: const AppBarTheme(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   iconTheme: IconThemeData(color: Colors.black),
@@ -48,15 +50,15 @@ class MyApp extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    textStyle: TextStyle(fontSize: 18),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    textStyle: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),
-              home: HomePage(),
+              home: const HomePage(),
               routes: {
-                ImageFormPage.routeName: (context) => ImageFormPage(),
-                DetailsPage.routeName: (context) => DetailsPage(),
+                ImageFormPage.routeName: (context) => const ImageFormPage(),
+                DetailsPage.routeName: (context) => const DetailsPage(),
               },
             ),
           );

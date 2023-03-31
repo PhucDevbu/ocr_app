@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ocr_app/model/image.dart' as ima;
 import 'package:ocr_app/screen/details_page.dart';
 import 'package:ocr_app/screen/image_form_page.dart';
+import 'package:ocr_app/screen/text_detector_view.dart';
 import 'package:provider/provider.dart';
-
-import '../model/image.dart';
+import '../provider/image_file_provider.dart' as ima;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,11 +17,29 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.image),
-          onPressed: () {
-            Navigator.pushNamed(context, ImageFormPage.routeName);
-          },
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              child: Icon(Icons.image),
+              onPressed: () {
+                Navigator.pushNamed(context, ImageFormPage.routeName);
+              },
+                         heroTag: "fab1",
+            ),
+            FloatingActionButton(
+              child: const Icon(Icons.camera),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TextRecognizerView(),
+                  ),
+                );
+              },
+                         heroTag: "fab2",
+            ),
+          ],
         ),
         appBar: AppBar(title: Text('ORC App')),
         body: FutureBuilder(
@@ -65,10 +82,10 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       IconButton(
-                                        onPressed: () => Provider.of<ImageFile>(
-                                                context,
-                                                listen: false)
-                                            .deleteImage(image.items[i]),
+                                        onPressed: () =>
+                                            Provider.of<ima.ImageFile>(context,
+                                                    listen: false)
+                                                .deleteImage(image.items[i]),
                                         icon: Icon(Icons.delete),
                                         color: Colors.red,
                                       )

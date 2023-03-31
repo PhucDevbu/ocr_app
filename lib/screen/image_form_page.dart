@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ocr_app/model/image.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/image_file_provider.dart';
 import '../widget/image_input.dart';
 
 class ImageFormPage extends StatefulWidget {

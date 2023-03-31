@@ -5,8 +5,9 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:ocr_app/main.dart';
 import 'package:ocr_app/model/image.dart' as ima;
-import 'package:provider/provider.dart';
+import 'package:ocr_app/screen/text_to_speech_page.dart';
 
 import 'edit_text_page.dart';
 
@@ -133,12 +134,23 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: EdgeInsets.symmetric(horizontal: 8.w),
               child: quill.QuillEditor.basic(
                 controller: _controller,
-                readOnly: false, // true for view only mode
+                readOnly: true, // true for view only mode
               ),
             ),
             ElevatedButton(
               onPressed: editText,
               child: Text('Advanced Text Editor'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TextToSpeechPage(text: _controller.document.toPlainText(),),
+                  ),
+                );
+              },
+              child: Text('Text to speech'),
             ),
           ]),
         ),
