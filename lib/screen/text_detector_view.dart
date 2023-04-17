@@ -10,12 +10,12 @@ class TextRecognizerView extends StatefulWidget {
 }
 
 class _TextRecognizerViewState extends State<TextRecognizerView> {
-  final TextRecognizer _textRecognizer =
-      TextRecognizer();
+  final TextRecognizer _textRecognizer = TextRecognizer();
   bool _canProcess = true;
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
+  RecognizedText? _recognizedText;
 
   @override
   void dispose() async {
@@ -30,6 +30,7 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
       title: 'Text Detector',
       customPaint: _customPaint,
       text: _text,
+      recognizedText: _recognizedText,
       onImage: (inputImage) {
         processImage(inputImage);
       },
@@ -51,6 +52,7 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
           inputImage.inputImageData!.size,
           inputImage.inputImageData!.imageRotation);
       _customPaint = CustomPaint(painter: painter);
+      _recognizedText = recognizedText;
     } else {
       _text = 'Recognized text:\n\n${recognizedText.text}';
       // TODO: set _customPaint to draw boundingRect on top of image

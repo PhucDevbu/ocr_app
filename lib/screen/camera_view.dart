@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../main.dart';
+import 'details_page.dart';
+import 'details_result.dart';
 
 enum ScreenMode { liveFeed, gallery }
 
@@ -16,11 +19,13 @@ class CameraView extends StatefulWidget {
       required this.title,
       required this.customPaint,
       this.text,
+      this.recognizedText,
       required this.onImage,
       this.onScreenModeChanged,
       this.initialDirection = CameraLensDirection.back})
       : super(key: key);
 
+  final RecognizedText? recognizedText;
   final String title;
   final CustomPaint? customPaint;
   final String? text;
@@ -40,7 +45,7 @@ class _CameraViewState extends State<CameraView> {
   ImagePicker? _imagePicker;
   int _cameraIndex = -1;
   double zoomLevel = 0.0, minZoomLevel = 0.0, maxZoomLevel = 0.0;
-  final bool _allowPicker = true;
+  final bool _allowPicker = false;
   bool _changingCameraLens = false;
 
   @override
@@ -105,7 +110,6 @@ class _CameraViewState extends State<CameraView> {
       ),
       body: _body(),
       floatingActionButton: _floatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -185,7 +189,24 @@ class _CameraViewState extends State<CameraView> {
                   ? null
                   : (maxZoomLevel - 1).toInt(),
             ),
-          )
+          ),
+          Positioned(
+              bottom: 50,
+              left: 50,
+              right: 50,
+              child: IconButton(
+                  icon: Icon(
+                    size: 70,
+                    Icons.filter_tilt_shift,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailsResult(
+                              recognizedText: widget.recognizedText!),
+                        ),
+                      )))
         ],
       ),
     );
