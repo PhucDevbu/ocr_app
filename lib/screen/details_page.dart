@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:docx_template/docx_template.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:ocr_app/main.dart';
 import 'package:ocr_app/model/image.dart' as ima;
 import 'package:ocr_app/screen/text_to_speech_page.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'edit_text_page.dart';
 
@@ -21,22 +24,19 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   late TextEditingController _textController;
-  late quill.QuillController _controller;
-  quill.Delta _delta = quill.Delta()..insert('');
+  late TextEditingController _dialogController;
   @override
   void initState() {
     _textController = TextEditingController();
-    _controller = quill.QuillController(
-      document:
-          quill.Document.fromDelta(_delta.concat(quill.Delta()..insert('\n'))),
-      selection: TextSelection.collapsed(offset: _delta.length),
-    );
+    _dialogController = TextEditingController();
+
     super.initState();
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _dialogController.dispose();
     super.dispose();
   }
 
@@ -74,27 +74,41 @@ class _DetailsPageState extends State<DetailsPage> {
       textRecognizer.close();
 
       _textController.text = resultText;
-      _delta = quill.Delta()..insert(_textController.text);
-      _controller.document =
-          quill.Document.fromDelta(_delta.concat(quill.Delta()..insert('\n')));
+      setState(() {});
     }
+  }
+
+  Future<void> shareTxtFile(String content,String name) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$name.txt');
+    await file.writeAsString(content);
+    await Share.shareFiles([file.path], text: 'Share via');
+  }
+
+  Future<void> shareWordFile(String content, String name) async {
+    final data = await rootBundle.load('assets/template.docx');
+    final bytes = data.buffer.asUint8List();
+
+    final template = await DocxTemplate.fromBytes(bytes);
+    Content c = Content();
+    c.add(TextContent("docname", content));
+    final d = await template.generate(c);
+    final directory = await getApplicationDocumentsDirectory();
+    final of = File('${directory.path}/$name.docx');
+    if (d != null) await of.writeAsBytes(d);
+    await Share.shareFiles([of.path], text: 'Share Word file');
   }
 
   Future<void> editText() async {
     // Navigate to a new screen where the user can edit the text
-    final List<dynamic>? result = await Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditTextPage(controller: _controller),
+        builder: (context) => EditTextPage(controller: _textController),
       ),
-    );
+    ).then((value) => setState(() {}));
 
     // Update the text with the new value returned from the editor screen
-    if (result != null) {
-      setState(() {
-        _delta = quill.Delta.fromJson(result);
-      });
-    }
   }
 
   @override
@@ -118,39 +132,104 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             ElevatedButton(
               onPressed: () => _OCRImage(imageId),
-              child: Text('Recognize Text'),
+              child: const Text('Recognize Text'),
             ),
-            SizedBox(height: 16),
-            // TextField(
-            //   style: TextStyle(fontSize: 12.sp),
-            //   controller: _textController,
-            //   maxLines: null,
-            //   decoration: InputDecoration(
-            //     hintText: 'Recognized Text',
-            //     border: OutlineInputBorder(),
-            //   ),
-            // ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w),
-              child: quill.QuillEditor.basic(
-                controller: _controller,
-                readOnly: true, // true for view only mode
-              ),
+            const SizedBox(height: 16),
+            Text(
+              _textController.text,
+              style: TextStyle(fontSize: 12.sp),
+              maxLines: null,
             ),
             ElevatedButton(
               onPressed: editText,
-              child: Text('Advanced Text Editor'),
+              child: const Text('Edit Text'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: _textController.text))
+                    .then((value) {
+                  // Thông báo copy thành công
+                  Fluttertoast.showToast(msg: 'Copied to clipboard');
+                });
+              },
+              child: const Text('Copy'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TextToSpeechPage(text: _controller.document.toPlainText(),),
+                    builder: (context) => TextToSpeechPage(
+                      text: _textController.text,
+                    ),
                   ),
                 );
               },
-              child: Text('Text to speech'),
+              child: const Text('Text to speech'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Enter Name File'),
+                      content: TextField(
+                        controller: _dialogController,
+                        decoration:
+                            InputDecoration(hintText: "Enter text here"),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            shareTxtFile(_textController.text,_dialogController.text);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: const Text('Text to txt'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Enter Name File'),
+                      content: TextField(
+                        controller: _dialogController,
+                        decoration:
+                            InputDecoration(hintText: "Enter text here"),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            shareWordFile(_textController.text,_dialogController.text);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: const Text('Text to word'),
             ),
           ]),
         ),
