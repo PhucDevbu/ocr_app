@@ -3,15 +3,19 @@ import 'dart:io';
 import 'package:docx_template/docx_template.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ocr_app/model/image.dart' as ima;
 import 'package:ocr_app/screen/text_to_speech_page.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
 
+import '../model/image_app.dart';
 import 'edit_text_page.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -40,9 +44,20 @@ class _DetailsPageState extends State<DetailsPage> {
     super.dispose();
   }
 
-  Future<void> _OCRImage(ima.MyImage imageId) async {
+  Future<File> _downloadImage(String url) async {
+  final response = await http.get(Uri.parse(url));
+  final directory = await getApplicationDocumentsDirectory();
+  final fileName = path.basename(url); // extract file name from url
+  final file = File('${directory.path}/$fileName'); // create file path with file name
+  await file.writeAsBytes(response.bodyBytes);
+  return file;
+}
+
+  Future<void> _OCRImage(String imageUrl) async {
+    final downloadedFile = await _downloadImage(imageUrl);
+
     final croppedFile = await ImageCropper().cropImage(
-      sourcePath: imageId.image.path,
+      sourcePath: downloadedFile.path,
       compressFormat: ImageCompressFormat.jpg,
       compressQuality: 100,
       uiSettings: [
@@ -59,8 +74,8 @@ class _DetailsPageState extends State<DetailsPage> {
     );
     if (croppedFile != null) {
       final inputImage = InputImage.fromFile(File(croppedFile.path));
-      final textRecognizer = GoogleMlKit.vision
-          .textRecognizer(script: TextRecognitionScript.latin);
+      final textRecognizer =
+          TextRecognizer(script: TextRecognitionScript.latin);
       final RecognizedText recognisedText =
           await textRecognizer.processImage(inputImage);
 
@@ -78,7 +93,44 @@ class _DetailsPageState extends State<DetailsPage> {
     }
   }
 
-  Future<void> shareTxtFile(String content,String name) async {
+  // Future<void> _OCRImage(ima.MyImage imageId) async {
+  //   final croppedFile = await ImageCropper().cropImage(
+  //     sourcePath: imageId.image.path,
+  //     compressFormat: ImageCompressFormat.jpg,
+  //     compressQuality: 100,
+  //     uiSettings: [
+  //       AndroidUiSettings(
+  //           toolbarTitle: 'Cropper',
+  //           toolbarColor: Colors.deepOrange,
+  //           toolbarWidgetColor: Colors.white,
+  //           initAspectRatio: CropAspectRatioPreset.original,
+  //           lockAspectRatio: false),
+  //       IOSUiSettings(
+  //         title: 'Cropper',
+  //       ),
+  //     ],
+  //   );
+  //   if (croppedFile != null) {
+  //     final inputImage = InputImage.fromFile(File(croppedFile.path));
+  //     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  //     final RecognizedText recognisedText =
+  //         await textRecognizer.processImage(inputImage);
+
+  //     String resultText = '';
+  //     for (TextBlock block in recognisedText.blocks) {
+  //       for (TextLine line in block.lines) {
+  //         resultText += line.text + '\n';
+  //       }
+  //     }
+
+  //     textRecognizer.close();
+
+  //     _textController.text = resultText;
+  //     setState(() {});
+  //   }
+  // }
+
+  Future<void> shareTxtFile(String content, String name) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/$name.txt');
     await file.writeAsString(content);
@@ -113,7 +165,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final imageId = ModalRoute.of(context)?.settings.arguments as ima.MyImage;
+    final imageId = ModalRoute.of(context)?.settings.arguments as ImageApp;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -123,15 +175,15 @@ class _DetailsPageState extends State<DetailsPage> {
             Container(
                 decoration: BoxDecoration(
                     border: Border.all(width: 2.w, color: Colors.black)),
-                child: Image.file(
-                  imageId.image,
+                child: Image.network(
+                  imageId.url,
                   fit: BoxFit.cover,
                 )),
             SizedBox(
               height: 16.h,
             ),
             ElevatedButton(
-              onPressed: () => _OCRImage(imageId),
+              onPressed: () => _OCRImage(imageId.url),
               child: const Text('Recognize Text'),
             ),
             const SizedBox(height: 16),
@@ -189,7 +241,8 @@ class _DetailsPageState extends State<DetailsPage> {
                         TextButton(
                           child: Text('OK'),
                           onPressed: () {
-                            shareTxtFile(_textController.text,_dialogController.text);
+                            shareTxtFile(
+                                _textController.text, _dialogController.text);
                           },
                         ),
                       ],
@@ -221,7 +274,8 @@ class _DetailsPageState extends State<DetailsPage> {
                         TextButton(
                           child: Text('OK'),
                           onPressed: () {
-                            shareWordFile(_textController.text,_dialogController.text);
+                            shareWordFile(
+                                _textController.text, _dialogController.text);
                           },
                         ),
                       ],

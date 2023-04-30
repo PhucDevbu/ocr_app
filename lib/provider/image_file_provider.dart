@@ -1,9 +1,15 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 import '../model/database.dart';
 import '../model/image.dart';
+import '../model/image_app.dart';
 
 class ImageFile with ChangeNotifier {
   List<MyImage> _items = [];
@@ -33,6 +39,22 @@ class ImageFile with ChangeNotifier {
     await DataHelper.deleteImage('images', image.id ?? 0);
     // _items.removeWhere((item) => item.id == image.id);
     fetchImage();
+    notifyListeners();
+  }
+
+  Future<void> saveImage(File image,String title, String createAt,String uId) async {
+    UploadTask uploadTask = FirebaseStorage.instance
+        .ref()
+        .child("profilepictures")
+        .child(Uuid().v1())
+        .putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String url = await taskSnapshot.ref.getDownloadURL();
+
+    ImageApp imageApp =
+        ImageApp(title: title, url: url, createAt: createAt, uId: uId);
+    FirebaseFirestore.instance.collection("image").add(imageApp.toMap());
+    Fluttertoast.showToast(msg: 'Up Success');
     notifyListeners();
   }
 }

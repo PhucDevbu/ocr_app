@@ -41,7 +41,8 @@ dependencies:
   flutter_screenutil: ^5.6.1
   flutter_tts: ^3.6.3
   fluttertoast: ^8.2.1
-  google_ml_kit: ^0.13.0
+  google_mlkit_text_recognition: ^0.6.0
+  http: ^0.13.5
   image_cropper: ^3.0.1
   image_picker: ^0.8.6+1
   path: ^1.8.2
@@ -51,6 +52,7 @@ dependencies:
   provider: ^6.0.5
   share_plus: ^6.3.2
   sqflite: ^2.2.5
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.0
