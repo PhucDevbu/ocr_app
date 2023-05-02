@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/user.dart';
+import '../result_page.dart';
 import 'login_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -48,6 +49,10 @@ class UserProfileScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // TODO: Show OCR history
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResultScreen()));
                   },
                   child: Text('OCR History'),
                 ),

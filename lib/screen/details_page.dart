@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docx_template/docx_template.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:ocr_app/model/result.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,13 +48,14 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Future<File> _downloadImage(String url) async {
-  final response = await http.get(Uri.parse(url));
-  final directory = await getApplicationDocumentsDirectory();
-  final fileName = path.basename(url); // extract file name from url
-  final file = File('${directory.path}/$fileName'); // create file path with file name
-  await file.writeAsBytes(response.bodyBytes);
-  return file;
-}
+    final response = await http.get(Uri.parse(url));
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = path.basename(url); // extract file name from url
+    final file =
+        File('${directory.path}/$fileName'); // create file path with file name
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
+  }
 
   Future<void> _OCRImage(String imageUrl) async {
     final downloadedFile = await _downloadImage(imageUrl);
@@ -89,6 +93,17 @@ class _DetailsPageState extends State<DetailsPage> {
       textRecognizer.close();
 
       _textController.text = resultText;
+      if (_textController.text != "") {
+        Result result = Result(
+            text: _textController.text,
+            url: imageUrl,
+            createAt: DateTime.now().toString(),
+            uId: FirebaseAuth.instance.currentUser!.uid);
+        await FirebaseFirestore.instance
+            .collection("results")
+            .add(result.toMap());
+      }
+
       setState(() {});
     }
   }
@@ -189,7 +204,7 @@ class _DetailsPageState extends State<DetailsPage> {
             const SizedBox(height: 16),
             Text(
               _textController.text,
-              style: TextStyle(fontSize: 12.sp),
+              style: TextStyle(fontSize: 16.sp),
               maxLines: null,
             ),
             ElevatedButton(

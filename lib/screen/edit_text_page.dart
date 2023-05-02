@@ -28,14 +28,14 @@ class _EditTextPageState extends State<EditTextPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-              style: TextStyle(fontSize: 12.sp),
-              controller: widget.controller,
-              maxLines: null,
-              decoration: const InputDecoration(
-              hintText: 'Edit Text',
-              border: OutlineInputBorder(),
+                style: TextStyle(fontSize: 16.sp),
+                controller: widget.controller,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  hintText: 'Edit Text',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
             ),
           )
         ],
