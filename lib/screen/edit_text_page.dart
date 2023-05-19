@@ -21,6 +21,12 @@ class _EditTextPageState extends State<EditTextPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Text'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -39,13 +45,6 @@ class _EditTextPageState extends State<EditTextPage> {
             ),
           )
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Return the edited text to the previous screen
-          Navigator.pop(context);
-        },
-        child: const Icon(Icons.save),
       ),
     );
   }

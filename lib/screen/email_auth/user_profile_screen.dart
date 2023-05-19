@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../model/user.dart';
 import '../result_page.dart';
 import 'login_screen.dart';
+import 'welcome_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -40,40 +41,59 @@ class UserProfileScreen extends StatelessWidget {
 
           final user = snapshot.data!;
 
-          return Center(
+          return SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Name: ${user.name}'),
-                Text('Email: ${user.email}'),
-                ElevatedButton(
-                  onPressed: () {
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  color: Colors.grey[300],
+                  child: Column(
+                    children: [
+                      SizedBox(height: 8.0),
+                      Text(
+                        user.name,
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(user.email),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text('OCR History'),
+                  onTap: () {
                     // TODO: Show OCR history
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResultScreen()));
+                      context,
+                      MaterialPageRoute(builder: (context) => ResultScreen()),
+                    );
                   },
-                  child: Text('OCR History'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.lock_outline),
+                  title: Text('Change Password'),
+                  onTap: () {
+                    _auth.sendPasswordResetEmail(email: user.email);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Password reset email sent')));
+                  },
+                ),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Log Out'),
+                  onTap: () {
                     _auth.signOut();
                     Navigator.popUntil(context, (route) => route.isFirst);
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => WelcomeScreen()),
                     );
                   },
-                  child: Text('Log Out'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _auth.sendPasswordResetEmail(email: user.email);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Password reset email sent')),
-                    );
-                  },
-                  child: Text('Reset Password'),
                 ),
               ],
             ),

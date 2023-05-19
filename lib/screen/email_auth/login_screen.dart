@@ -18,25 +18,35 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
 
   void login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    if (email == "" || password == "") {
-      log("Please fill all details");
-    } else {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        if (userCredential.user != null) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-          Navigator.pushReplacement(
-              context, CupertinoPageRoute(builder: (context) => HomePage()));
-        }
-      } on FirebaseAuthException catch (ex) {
-        log(ex.code.toString());
+    if (email.isEmpty || password.isEmpty) {
+      // show snackbar if any of the fields are empty
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please fill all details'),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      if (userCredential.user != null) {
+        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (context) => const HomePage()));
       }
+    } on FirebaseAuthException catch (ex) {
+      // show snackbar with error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(ex.message ?? 'An error occurred'),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
@@ -54,51 +64,126 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.all(15),
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Image.asset(
+                    'assets/images/ocr_image.png',
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextField(
-                    decoration: InputDecoration(labelText: "Email Address"),
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: emailController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Password"),
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          // toggle password visibility
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          semanticLabel:
+                              _obscureText ? 'show password' : 'hide password',
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: passwordController,
                   ),
-                  SizedBox(
-                    height: 20,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ForgetPasswordScreen()),
+                          );
+                        },
+                        child: Text(
+                          "Forget password?",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ],
                   ),
-                  CupertinoButton(
+                  ElevatedButton(
                     onPressed: () {
                       login();
                     },
-                    color: Colors.blue,
-                    child: Text("Log In"),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black54)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "Login".toUpperCase(),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  CupertinoButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SignUpScreen()));
                     },
-                    child: Text("Create an Account"),
+                    child: Text(
+                      "Create an Account",
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
-                  ),
-                  CupertinoButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgetPasswordScreen()));
-                    },
-                    child: Text("Forget password"),
                   ),
                 ],
               ),

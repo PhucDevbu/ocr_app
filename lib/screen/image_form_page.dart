@@ -23,19 +23,9 @@ class ImageFormPage extends StatefulWidget {
 
 class _ImageFormPageState extends State<ImageFormPage> {
   final _titleController = TextEditingController();
-  File savedImage = File("");
+  File? savedImage;
   void savedImages(File image) {
     savedImage = image;
-  }
-
-  void onSave() {
-    if (_titleController.text.isEmpty || savedImage == null) {
-      return;
-    } else {
-      Provider.of<ImageFile>(context, listen: false)
-          .addImagePlace(_titleController.text, savedImage);
-      Navigator.pop(context);
-    }
   }
 
   @override
@@ -45,30 +35,62 @@ class _ImageFormPageState extends State<ImageFormPage> {
         title: Text('Image Form'),
         actions: [
           IconButton(
-              onPressed: () => _uploadImageToFirebase(context, savedImage),
+              onPressed: () =>
+                  _uploadImageToFirebase(context, savedImage, _titleController),
               icon: Icon(Icons.save))
         ],
       ),
-      body: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(16.sp),
-          child: TextField(
-            controller: _titleController,
-            decoration: InputDecoration(labelText: 'Title'),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Padding(
+            padding: EdgeInsets.all(16.sp),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Title',
+                prefixIcon: Icon(Icons.image),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  borderSide: BorderSide(),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+              controller: _titleController,
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.sp),
-          child: ImageInput(
-            imageSaveAt: savedImages,
-          ),
-        )
-      ]),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+            child: ImageInput(
+              imageSaveAt: savedImages,
+            ),
+          )
+        ]),
+      ),
     );
   }
 
   Future<void> _uploadImageToFirebase(
-      BuildContext context, File imageFile) async {
+    BuildContext context,
+    File? imageFile,
+    TextEditingController titleController,
+  ) async {
+    if (imageFile == null) {
+      Fluttertoast.showToast(msg: 'Please select an image');
+      return;
+    }
+
+    String title = titleController.text.trim();
+    if (title.isEmpty) {
+      Fluttertoast.showToast(msg: 'Please enter a title');
+      return;
+    }
+
     // Hiển thị Dialog với CircularProgressIndicator
     showDialog(
       context: context,
@@ -105,7 +127,7 @@ class _ImageFormPageState extends State<ImageFormPage> {
     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     print('Download URL: $downloadUrl');
     ImageApp imageApp = ImageApp(
-        title: _titleController.text,
+        title: title,
         url: downloadUrl,
         createAt: DateTime.now().toString(),
         uId: FirebaseAuth.instance.currentUser!.uid);

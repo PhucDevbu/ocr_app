@@ -99,103 +99,119 @@ class _DetailsHistoryState extends State<DetailsHistory> {
         body: Center(
           child: SingleChildScrollView(
             child: Column(children: [
-              Text(
-                _textController.text,
-                style: TextStyle(fontSize: 16.sp),
-                maxLines: null,
-              ),
-              ElevatedButton(
-                onPressed: editText,
-                child: const Text('Edit Text'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: _textController.text))
-                      .then((value) {
-                    // Thông báo copy thành công
-                    Fluttertoast.showToast(msg: 'Copied to clipboard');
-                  });
-                },
-                child: const Text('Copy'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TextToSpeechPage(
-                        text: _textController.text,
-                      ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 2.w, color: Colors.black)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Text(
+                      _textController.text,
+                      style: TextStyle(fontSize: 16.sp),
+                      maxLines: null,
                     ),
-                  );
-                },
-                child: const Text('Text to speech'),
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Enter Name File'),
-                        content: TextField(
-                          controller: _dialogController,
-                          decoration:
-                              InputDecoration(hintText: "Enter text here"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: editText,
+                    icon: Icon(Icons.edit),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                              ClipboardData(text: _textController.text))
+                          .then((value) {
+                        // Thông báo copy thành công
+                        Fluttertoast.showToast(msg: 'Copied to clipboard');
+                      });
+                    },
+                    icon: Icon(Icons.copy),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TextToSpeechPage(
+                            text: _textController.text,
+                          ),
                         ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              shareTxtFile(
-                                  _textController.text, _dialogController.text);
-                            },
-                          ),
-                        ],
                       );
                     },
-                  );
-                },
-                child: const Text('Text to txt'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Enter Name File'),
-                        content: TextField(
-                          controller: _dialogController,
-                          decoration:
-                              InputDecoration(hintText: "Enter text here"),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              shareWordFile(
-                                  _textController.text, _dialogController.text);
-                            },
-                          ),
-                        ],
+                    icon: Icon(Icons.volume_up),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Enter Name Txt File'),
+                            content: TextField(
+                              controller: _dialogController,
+                              decoration:
+                                  InputDecoration(hintText: "Enter text here"),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  shareTxtFile(_textController.text,
+                                      _dialogController.text);
+                                },
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                child: const Text('Text to word'),
+                    icon: Icon(Icons.text_fields),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Enter Name Word File'),
+                            content: TextField(
+                              controller: _dialogController,
+                              decoration:
+                                  InputDecoration(hintText: "Enter text here"),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  shareWordFile(_textController.text,
+                                      _dialogController.text);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: Icon(Icons.description),
+                  ),
+                ],
               ),
             ]),
           ),

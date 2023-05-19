@@ -55,7 +55,6 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
       _recognizedText = recognizedText;
     } else {
       _text = 'Recognized text:\n\n${recognizedText.text}';
-      // TODO: set _customPaint to draw boundingRect on top of image
       _customPaint = null;
     }
     _isBusy = false;

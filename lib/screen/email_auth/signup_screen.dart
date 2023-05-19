@@ -20,17 +20,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cPasswordController = TextEditingController();
-
+  bool _obscureText = true;
+  bool _obscureTextC = true;
   void createAccount() async {
     String email = emailController.text.trim();
     String name = nameController.text.trim();
     String password = passwordController.text.trim();
     String cPassword = cPasswordController.text.trim();
 
-    if (email == "" || name == "" || password == "" || cPassword == "") {
-      log("Please fill all details");
+    if (email.isEmpty ||
+        name.isEmpty ||
+        password.isEmpty ||
+        cPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please fill all details.'),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ));
     } else if (password != cPassword) {
-      log("Password do not match");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Passwords do not match.'),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ));
     } else {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
@@ -43,7 +55,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Navigator.pop(context);
         }
       } on FirebaseAuthException catch (ex) {
-        log(ex.code.toString());
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(ex.code.toString()),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ));
       }
     }
   }
@@ -63,42 +79,141 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 children: [
                   TextField(
-                    decoration: InputDecoration(labelText: "Email Address"),
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: emailController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextField(
-                    decoration: InputDecoration(labelText: "Name"),
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: nameController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Password"),
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          // toggle password visibility
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          semanticLabel:
+                              _obscureText ? 'show password' : 'hide password',
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: passwordController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Confirm Password"),
+                    obscureText: _obscureTextC,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      prefixIcon: Icon(Icons.lock),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          // toggle password visibility
+                          setState(() {
+                            _obscureTextC = !_obscureTextC;
+                          });
+                        },
+                        child: Icon(
+                          _obscureTextC
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          semanticLabel:
+                              _obscureTextC ? 'show password' : 'hide password',
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: cPasswordController,
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  CupertinoButton(
+                  ElevatedButton(
                     onPressed: () {
                       createAccount();
                     },
-                    color: Colors.blue,
-                    child: Text("Create Account"),
-                  )
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black54)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "create account".toUpperCase(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )

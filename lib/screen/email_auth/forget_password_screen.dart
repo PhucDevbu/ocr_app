@@ -33,21 +33,54 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               child: Column(
                 children: [
                   TextField(
-                    decoration: InputDecoration(labelText: "Email Address"),
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                     controller: emailController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  CupertinoButton(
+                  ElevatedButton(
                     onPressed: () {
-                      resetPassword(emailController.text.trim());
-                      Fluttertoast.showToast(msg: 'Please Check Your Mail');
-                      Navigator.pop(context);
+                      String email = emailController.text.trim();
+                      if (email.isEmpty || !email.contains('@')) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please enter a valid email address'),
+                          ),
+                        );
+                      } else {
+                        resetPassword(email);
+                        Fluttertoast.showToast(msg: 'Please check your email');
+                        Navigator.pop(context);
+                      }
                     },
-                    color: Colors.blue,
-                    child: Text("Forget Password"),
-                  )
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black54)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "Forget Password".toUpperCase(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )

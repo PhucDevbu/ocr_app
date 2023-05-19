@@ -53,27 +53,21 @@ class _ImageInputState extends State<ImageInput> {
     return Column(
       children: [
         Container(
-          height: 200.h,
-          width: 325.w,
-          decoration: BoxDecoration(
-              border: Border.all(width: 2.w, color: Colors.black)),
           child: _imageFile != null
               ? Image.file(
                   _imageFile!,
                   fit: BoxFit.cover,
                 )
-              : Center(
-                  child: Text('Add image'),
-                ),
+              : Container(),
         ),
         TextButton.icon(
           onPressed: _takeImage,
-          icon: Icon(Icons.image),
-          label: Text('Add image from galery'),
+          icon: Icon(Icons.photo_library),
+          label: Text('Add image from gallery'),
         ),
         TextButton.icon(
           onPressed: _takePhoto,
-          icon: Icon(Icons.camera),
+          icon: Icon(Icons.camera_alt),
           label: Text('Add image from camera'),
         )
       ],

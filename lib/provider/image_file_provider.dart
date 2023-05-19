@@ -8,39 +8,38 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/database.dart';
-import '../model/image.dart';
 import '../model/image_app.dart';
 
 class ImageFile with ChangeNotifier {
-  List<MyImage> _items = [];
-  List<MyImage> get items {
-    return [..._items];
-  }
+  // List<MyImage> _items = [];
+  // List<MyImage> get items {
+  //   return [..._items];
+  // }
 
-  Future<void> addImagePlace(String title, File image) async {
-    final newImage = MyImage(image: image, title: title);
-    _items.add(newImage);
-    notifyListeners();
-    DataHelper.insert("images", newImage.toMap());
-  }
+  // Future<void> addImagePlace(String title, File image) async {
+  //   final newImage = MyImage(image: image, title: title);
+  //   _items.add(newImage);
+  //   notifyListeners();
+  //   DataHelper.insert("images", newImage.toMap());
+  // }
 
-  MyImage findImage(String imageId) {
-    return _items.firstWhere((image) => image.id == imageId);
-  }
+  // MyImage findImage(String imageId) {
+  //   return _items.firstWhere((image) => image.id == imageId);
+  // }
 
-  Future<void> fetchImage() async {
-    final list = await DataHelper.getData('images');
-    _items =
-        List.generate(list.length, (index) => MyImage.fromMap(list[index]));
-    notifyListeners();
-  }
+  // Future<void> fetchImage() async {
+  //   final list = await DataHelper.getData('images');
+  //   _items =
+  //       List.generate(list.length, (index) => MyImage.fromMap(list[index]));
+  //   notifyListeners();
+  // }
 
-  Future<void> deleteImage(MyImage image) async {
-    await DataHelper.deleteImage('images', image.id ?? 0);
-    // _items.removeWhere((item) => item.id == image.id);
-    fetchImage();
-    notifyListeners();
-  }
+  // Future<void> deleteImage(MyImage image) async {
+  //   await DataHelper.deleteImage('images', image.id ?? 0);
+  //   // _items.removeWhere((item) => item.id == image.id);
+  //   fetchImage();
+  //   notifyListeners();
+  // }
 
   Future<void> saveImage(File image,String title, String createAt,String uId) async {
     UploadTask uploadTask = FirebaseStorage.instance
