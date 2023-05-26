@@ -6,11 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/image_app.dart';
-import '../provider/image_file_provider.dart';
 import '../widget/image_input.dart';
 
 class ImageFormPage extends StatefulWidget {
@@ -32,12 +30,12 @@ class _ImageFormPageState extends State<ImageFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Image Form'),
+        title: const Text('Image Form'),
         actions: [
           IconButton(
               onPressed: () =>
                   _uploadImageToFirebase(context, savedImage, _titleController),
-              icon: Icon(Icons.save))
+              icon: const Icon(Icons.save))
         ],
       ),
       body: SingleChildScrollView(
@@ -47,18 +45,18 @@ class _ImageFormPageState extends State<ImageFormPage> {
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Title',
-                prefixIcon: Icon(Icons.image),
+                prefixIcon: const Icon(Icons.image),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  borderSide: BorderSide(),
+                  borderSide: const BorderSide(),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: const BorderSide(color: Colors.blue),
                 ),
               ),
               controller: _titleController,
@@ -98,10 +96,10 @@ class _ImageFormPageState extends State<ImageFormPage> {
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: const [
                 CircularProgressIndicator(),
                 SizedBox(width: 20.0),
                 Text('Uploading image...'),
@@ -116,7 +114,7 @@ class _ImageFormPageState extends State<ImageFormPage> {
     Reference storageReference = FirebaseStorage.instance
         .ref()
         .child("profilepictures")
-        .child(Uuid().v1());
+        .child(const Uuid().v1());
     UploadTask uploadTask = storageReference.putFile(imageFile);
     TaskSnapshot taskSnapshot =
         await uploadTask.whenComplete(() => print('Image uploaded'));

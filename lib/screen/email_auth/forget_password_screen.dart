@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -23,35 +22,35 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Forget Password"),
+        title: const Text("Forget Password"),
       ),
       body: SafeArea(
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
                   TextField(
                     decoration: InputDecoration(
                       labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: const Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(),
+                        borderSide: const BorderSide(),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.grey),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: const BorderSide(color: Colors.blue),
                       ),
                     ),
                     controller: emailController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
@@ -59,7 +58,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       String email = emailController.text.trim();
                       if (email.isEmpty || !email.contains('@')) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text('Please enter a valid email address'),
                           ),
                         );

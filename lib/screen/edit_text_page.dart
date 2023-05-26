@@ -23,7 +23,7 @@ class _EditTextPageState extends State<EditTextPage> {
         title: const Text('Edit Text'),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             onPressed: () => Navigator.pop(context),
           )
         ],

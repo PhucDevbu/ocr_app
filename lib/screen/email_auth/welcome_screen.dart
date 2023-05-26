@@ -8,7 +8,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Background(
+    return const Background(
       child: SingleChildScrollView(
         child: SafeArea(child: MobileWelcomeScreen()),
       ),
@@ -27,7 +27,7 @@ class MobileWelcomeScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const WelcomeImage(),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Row(
@@ -54,7 +54,7 @@ class WelcomeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           "WELCOME TO OCR APP",
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -63,12 +63,12 @@ class WelcomeImage extends StatelessWidget {
             color: Colors.blueGrey,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Row(
           children: [
-            Spacer(),
+            const Spacer(),
             Expanded(
               flex: 8,
               child: Image.asset(
@@ -76,7 +76,7 @@ class WelcomeImage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ],
@@ -99,7 +99,7 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
         child: Stack(
@@ -143,7 +143,7 @@ class LoginAndSignupBtn extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return LoginScreen();
+                    return const LoginScreen();
                   },
                 ),
               );
@@ -168,7 +168,7 @@ class LoginAndSignupBtn extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return SignUpScreen();
+                  return const SignUpScreen();
                 },
               ),
             );
@@ -177,7 +177,7 @@ class LoginAndSignupBtn extends StatelessWidget {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.black),
+                side: const BorderSide(color: Colors.black),
               ),
             ),
             backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -192,10 +192,10 @@ class LoginAndSignupBtn extends StatelessWidget {
             ),
             elevation: MaterialStateProperty.all<double>(5),
             padding: MaterialStateProperty.all<EdgeInsets>(
-              EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             textStyle: MaterialStateProperty.all<TextStyle>(
-              TextStyle(
+              const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -209,7 +209,7 @@ class LoginAndSignupBtn extends StatelessWidget {
             child: Center(
               child: Text(
                 "Sign Up".toUpperCase(),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
             ),
           ),

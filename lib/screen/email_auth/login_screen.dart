@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,16 +53,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Login"),
+        title: const Text("Login"),
       ),
       body: SafeArea(
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Image.asset(
@@ -73,36 +71,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 200,
                     fit: BoxFit.cover,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextField(
                     decoration: InputDecoration(
                       labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: const Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(),
+                        borderSide: const BorderSide(),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.grey),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: const BorderSide(color: Colors.blue),
                       ),
                     ),
                     controller: emailController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextField(
                     obscureText: _obscureText,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: GestureDetector(
                         onTap: () {
                           // toggle password visibility
@@ -120,15 +118,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(),
+                        borderSide: const BorderSide(),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.grey),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: const BorderSide(color: Colors.blue),
                       ),
                     ),
                     controller: passwordController,
@@ -141,10 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ForgetPasswordScreen()),
+                                builder: (context) => const ForgetPasswordScreen()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           "Forget password?",
                           style: TextStyle(color: Colors.blue),
                         ),
@@ -167,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextButton(
@@ -175,14 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpScreen()));
+                              builder: (context) => const SignUpScreen()));
                     },
-                    child: Text(
+                    child: const Text(
                       "Create an Account",
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ],

@@ -12,7 +12,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:image_cropper/image_cropper.dart';
 import 'package:ocr_app/screen/text_to_speech_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -242,7 +241,7 @@ class _DetailsPageState extends State<DetailsPage> {
               children: [
                 IconButton(
                   onPressed: editText,
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                 ),
                 IconButton(
                   onPressed: () {
@@ -252,7 +251,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       Fluttertoast.showToast(msg: 'Copied to clipboard');
                     });
                   },
-                  icon: Icon(Icons.copy),
+                  icon: const Icon(Icons.copy),
                 ),
                 IconButton(
                   onPressed: () {
@@ -265,7 +264,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.volume_up),
+                  icon: const Icon(Icons.volume_up),
                 ),
                 IconButton(
                   onPressed: () {
@@ -273,21 +272,21 @@ class _DetailsPageState extends State<DetailsPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Enter Name PDF File'),
+                          title: const Text('Enter Name PDF File'),
                           content: TextField(
                             controller: _dialogController,
                             decoration:
-                                InputDecoration(hintText: "Enter text here"),
+                                const InputDecoration(hintText: "Enter text here"),
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                             TextButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 convertImageUrlToPdfAndShare(
                                     imageId.url, _dialogController.text);
@@ -298,7 +297,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       },
                     );
                   },
-                  icon: Icon(Icons.picture_as_pdf),
+                  icon: const Icon(Icons.picture_as_pdf),
                 ),
                 IconButton(
                   onPressed: () {
@@ -306,21 +305,21 @@ class _DetailsPageState extends State<DetailsPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Enter Name Txt File'),
+                          title: const Text('Enter Name Txt File'),
                           content: TextField(
                             controller: _dialogController,
                             decoration:
-                                InputDecoration(hintText: "Enter text here"),
+                                const InputDecoration(hintText: "Enter text here"),
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                             TextButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 shareTxtFile(_textController.text,
                                     _dialogController.text);
@@ -331,7 +330,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       },
                     );
                   },
-                  icon: Icon(Icons.text_fields),
+                  icon: const Icon(Icons.text_fields),
                 ),
                 IconButton(
                   onPressed: () {
@@ -339,21 +338,21 @@ class _DetailsPageState extends State<DetailsPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Enter Name Word File'),
+                          title: const Text('Enter Name Word File'),
                           content: TextField(
                             controller: _dialogController,
                             decoration:
-                                InputDecoration(hintText: "Enter text here"),
+                                const InputDecoration(hintText: "Enter text here"),
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                             TextButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 shareWordFile(_textController.text,
                                     _dialogController.text);
@@ -364,7 +363,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       },
                     );
                   },
-                  icon: Icon(Icons.description),
+                  icon: const Icon(Icons.description),
                 ),
               ],
             ),

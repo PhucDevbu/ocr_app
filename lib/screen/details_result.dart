@@ -96,7 +96,7 @@ class _DetailsResultState extends State<DetailsResult> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AppBar(title: Text("Result")),
+        appBar: AppBar(title: const Text("Result")),
         body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -123,7 +123,7 @@ class _DetailsResultState extends State<DetailsResult> {
                     children: [
                       IconButton(
                         onPressed: editText,
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                       ),
                       IconButton(
                         onPressed: () {
@@ -134,7 +134,7 @@ class _DetailsResultState extends State<DetailsResult> {
                             Fluttertoast.showToast(msg: 'Copied to clipboard');
                           });
                         },
-                        icon: Icon(Icons.copy),
+                        icon: const Icon(Icons.copy),
                       ),
                       IconButton(
                         onPressed: () {
@@ -147,7 +147,7 @@ class _DetailsResultState extends State<DetailsResult> {
                             ),
                           );
                         },
-                        icon: Icon(Icons.volume_up),
+                        icon: const Icon(Icons.volume_up),
                       ),
                       IconButton(
                         onPressed: () {
@@ -155,21 +155,21 @@ class _DetailsResultState extends State<DetailsResult> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Enter Name Txt File'),
+                                title: const Text('Enter Name Txt File'),
                                 content: TextField(
                                   controller: _dialogController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Enter text here"),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('Cancel'),
+                                    child: const Text('Cancel'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       shareTxtFile(_textController.text,
                                           _dialogController.text);
@@ -180,7 +180,7 @@ class _DetailsResultState extends State<DetailsResult> {
                             },
                           );
                         },
-                        icon: Icon(Icons.text_fields),
+                        icon: const Icon(Icons.text_fields),
                       ),
                       IconButton(
                         onPressed: () {
@@ -188,21 +188,21 @@ class _DetailsResultState extends State<DetailsResult> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Enter Name Word File'),
+                                title: const Text('Enter Name Word File'),
                                 content: TextField(
                                   controller: _dialogController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Enter text here"),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('Cancel'),
+                                    child: const Text('Cancel'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       shareWordFile(_textController.text,
                                           _dialogController.text);
@@ -213,7 +213,7 @@ class _DetailsResultState extends State<DetailsResult> {
                             },
                           );
                         },
-                        icon: Icon(Icons.description),
+                        icon: const Icon(Icons.description),
                       ),
                     ],
                   ),

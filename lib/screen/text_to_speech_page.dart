@@ -198,7 +198,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text to speech'),
+        title: const Text('Text to speech'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -220,14 +220,15 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
         if (snapshot.hasData) {
           return _languageDropDownSection(snapshot.data);
         } else if (snapshot.hasError) {
-          return Text('Error loading languages...');
-        } else
-          return Text('Loading Languages...');
+          return const Text('Error loading languages...');
+        } else {
+          return const Text('Loading Languages...');
+        }
       });
 
   Widget _inputSection() => Container(
       alignment: Alignment.topCenter,
-      padding: EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
+      padding: const EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
       child: TextField(
         controller: textEditingController,
         maxLines: 11,
@@ -236,7 +237,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
 
   Widget _btnSection() {
     return Container(
-      padding: EdgeInsets.only(top: 50.0),
+      padding: const EdgeInsets.only(top: 50.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -252,7 +253,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   }
 
   Widget _enginesDropDownSection(dynamic engines) => Container(
-        padding: EdgeInsets.only(top: 50.0),
+        padding: const EdgeInsets.only(top: 50.0),
         child: DropdownButton(
           value: engine,
           items: getEnginesDropDownMenuItems(engines),
@@ -261,7 +262,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
       );
 
   Widget _languageDropDownSection(dynamic languages) => Container(
-      padding: EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         DropdownButton(
           value: language,

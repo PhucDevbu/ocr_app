@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../model/user.dart';
 import '../result_page.dart';
-import 'login_screen.dart';
 import 'welcome_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -26,7 +25,7 @@ class UserProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile'),
+        title: const Text('User Profile'),
       ),
       body: StreamBuilder<UserApp>(
         stream: getUserStream(_user!.uid),
@@ -36,7 +35,7 @@ class UserProfileScreen extends StatelessWidget {
           }
 
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final user = snapshot.data!;
@@ -45,14 +44,14 @@ class UserProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   color: Colors.grey[300],
                   child: Column(
                     children: [
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       Text(
                         user.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -61,37 +60,36 @@ class UserProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 ListTile(
-                  leading: Icon(Icons.history),
-                  title: Text('OCR History'),
+                  leading: const Icon(Icons.history),
+                  title: const Text('OCR History'),
                   onTap: () {
-                    // TODO: Show OCR history
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ResultScreen()),
+                      MaterialPageRoute(builder: (context) => const ResultScreen()),
                     );
                   },
                 ),
-                Divider(),
+                const Divider(),
                 ListTile(
-                  leading: Icon(Icons.lock_outline),
-                  title: Text('Change Password'),
+                  leading: const Icon(Icons.lock_outline),
+                  title: const Text('Change Password'),
                   onTap: () {
                     _auth.sendPasswordResetEmail(email: user.email);
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Password reset email sent')));
+                        const SnackBar(content: Text('Password reset email sent')));
                   },
                 ),
-                Divider(),
+                const Divider(),
                 ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Log Out'),
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Log Out'),
                   onTap: () {
                     _auth.signOut();
                     Navigator.popUntil(context, (route) => route.isFirst);
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
                     );
                   },
                 ),

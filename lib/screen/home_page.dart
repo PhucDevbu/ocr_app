@@ -7,9 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ocr_app/screen/details_page.dart';
 import 'package:ocr_app/screen/image_form_page.dart';
 import 'package:ocr_app/screen/text_detector_view.dart';
-import 'package:provider/provider.dart';
 import '../model/image_app.dart';
-import '../provider/image_file_provider.dart' as ima;
 import 'email_auth/user_profile_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,8 +37,8 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton.icon(
-              icon: Icon(Icons.image),
-              label: Text('Image'),
+              icon: const Icon(Icons.image),
+              label: const Text('Image'),
               onPressed: () {
                 Navigator.pushNamed(context, ImageFormPage.routeName);
               },
@@ -53,10 +51,10 @@ class _HomePageState extends State<HomePage> {
                     Colors.transparent), // Màu nền khi nhấn
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             TextButton.icon(
-              icon: Icon(Icons.camera_alt),
-              label: Text('Camera'),
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Camera'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -75,7 +73,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         appBar: AppBar(
-          title: Text('ORC App'),
+          title: const Text('ORC App'),
           actions: [
             IconButton(
               onPressed: () {
@@ -84,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                     CupertinoPageRoute(
                         builder: (context) => UserProfileScreen()));
               },
-              icon: Icon(Icons.account_circle),
+              icon: const Icon(Icons.account_circle),
             ),
           ],
         ),
@@ -94,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               "My Image",
               style: TextStyle(fontSize: 20.sp),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 height: 5.0, // set the height to 0.0 to remove extra space
@@ -109,16 +107,15 @@ class _HomePageState extends State<HomePage> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
-                QuerySnapshot querySnapshot = snapshot.data!;
                 final documents = snapshot.data!.docs;
                 final sortedDocuments = documents.toList();
                 sortedDocuments
                     .sort((a, b) => b['createAt'].compareTo(a['createAt']));
                 return Expanded(
                   child: Container(
-                    color: Color(0xfff3f2f2),
+                    color: const Color(0xfff3f2f2),
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         var imageApp =
@@ -149,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 title: Text(
                                   imageApp.title,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -168,12 +165,12 @@ class _HomePageState extends State<HomePage> {
                                         .doc(sortedDocuments[index].id)
                                         .delete();
                                   },
-                                  icon: Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete),
                                   color: Colors.red,
                                   iconSize: 30.0,
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
                                 child: Divider(
                                   height:

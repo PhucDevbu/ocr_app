@@ -13,7 +13,6 @@ import 'package:ocr_app/screen/image_form_page.dart';
 import 'package:provider/provider.dart';
 
 import 'screen/details_page.dart';
-import 'screen/email_auth/login_screen.dart';
 import 'screen/email_auth/welcome_screen.dart';
 
 List<CameraDescription> cameras = [];
@@ -66,8 +65,8 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               home: (FirebaseAuth.instance.currentUser != null)
-                  ? HomePage()
-                  : WelcomeScreen(),
+                  ? const HomePage()
+                  : const WelcomeScreen(),
               routes: {
                 ImageFormPage.routeName: (context) => const ImageFormPage(),
                 DetailsPage.routeName: (context) => const DetailsPage(),

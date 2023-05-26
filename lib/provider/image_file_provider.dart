@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
-import '../model/database.dart';
 import '../model/image_app.dart';
 
 class ImageFile with ChangeNotifier {
@@ -45,7 +44,7 @@ class ImageFile with ChangeNotifier {
     UploadTask uploadTask = FirebaseStorage.instance
         .ref()
         .child("profilepictures")
-        .child(Uuid().v1())
+        .child(const Uuid().v1())
         .putFile(image);
     TaskSnapshot taskSnapshot = await uploadTask;
     String url = await taskSnapshot.ref.getDownloadURL();

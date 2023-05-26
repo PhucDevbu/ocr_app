@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -62,13 +61,13 @@ class _ImageInputState extends State<ImageInput> {
         ),
         TextButton.icon(
           onPressed: _takeImage,
-          icon: Icon(Icons.photo_library),
-          label: Text('Add image from gallery'),
+          icon: const Icon(Icons.photo_library),
+          label: const Text('Add image from gallery'),
         ),
         TextButton.icon(
           onPressed: _takePhoto,
-          icon: Icon(Icons.camera_alt),
-          label: Text('Add image from camera'),
+          icon: const Icon(Icons.camera_alt),
+          label: const Text('Add image from camera'),
         )
       ],
     );
