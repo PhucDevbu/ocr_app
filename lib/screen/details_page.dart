@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docx_template/docx_template.dart';
@@ -18,6 +19,7 @@ import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdfWidgets;
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 import '../model/image_app.dart';
 import 'edit_text_page.dart';
@@ -108,6 +110,30 @@ class _DetailsPageState extends State<DetailsPage> {
     await file.writeAsBytes(uint8List);
     return file;
   }
+
+  Future<List<double>> processImageWithModel(String modelPath, List<double> inputData) async {
+  final interpreter = await Interpreter.fromAsset(modelPath);
+  interpreter.allocateTensors();
+
+  final inputTensors = interpreter.getInputTensors();
+  final outputTensors = interpreter.getOutputTensors();
+
+  final inputTensor = inputTensors[0];
+  final outputTensor = outputTensors[0];
+
+  final inputArray = inputTensor.data as Float32List;
+  final outputArray = outputTensor.data as Float32List;
+
+  for (int i = 0; i < inputData.length; i++) {
+    inputArray[i] = inputData[i];
+  }
+
+  interpreter.invoke();
+
+  final outputData = outputArray.toList();
+
+  return outputData;
+}
 
   Future<void> _OCRImage(String imageUrl) async {
     final downloadedFile = await _downloadImage(imageUrl);
